@@ -166,12 +166,12 @@ struct SyncSettingsView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     if folderPath == nil {
                         if lostAccess {
-                            Text("Paster lost access to the sync folder. Choose it again below to resume syncing.")
+                            Text("Déjà lost access to the sync folder. Choose it again below to resume syncing.")
                         } else {
                             Text("Choose a sync folder below to turn on syncing.")
                         }
                     } else {
-                        Text("Your clipboard history and Pinboards sync between your Macs through the folder you chose. The data only ever passes through your own storage — Paster never touches a third-party server. Deletions are not propagated across devices.")
+                        Text("Your clipboard history and Pinboards sync between your Macs through the folder you chose. The data only ever passes through your own storage — Déjà never touches a third-party server. Deletions are not propagated across devices.")
                         if icloudSync {
                             statusLine
                         }
@@ -193,7 +193,7 @@ struct SyncSettingsView: View {
                         chooseFolder()
                     }
                 }
-                Text("Any folder all of your devices share works — for example a folder inside iCloud Drive, or a company drive. Paster keeps its files in a Paster subfolder and can only reach the folder you pick here.")
+                Text("Any folder all of your devices share works — for example a folder inside iCloud Drive, or a company drive. Déjà keeps its files in a Déjà subfolder and can only reach the folder you pick here.")
                     .font(.system(size: 12))
                     .foregroundStyle(.secondary)
             }
@@ -213,7 +213,7 @@ struct SyncSettingsView: View {
             HStack(spacing: 6) {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)
-                Text("Paster lost access to the sync folder. Choose it again below to resume syncing.")
+                Text("Déjà lost access to the sync folder. Choose it again below to resume syncing.")
             }
         } else if lastSyncedAt > 0 {
             Text("Last synced \(Date(timeIntervalSince1970: lastSyncedAt).formatted(date: .abbreviated, time: .shortened))")
@@ -266,9 +266,9 @@ struct SyncSettingsView: View {
             } footer: {
                 Group {
                     if SyncService.isAvailable {
-                        Text("By default your clipboard history and Pinboards sync between your Macs through iCloud Drive (iCloud Drive/Paster/). The data only ever passes through your own iCloud — Paster never touches a third-party server. Deletions are not propagated across devices.")
+                        Text("By default your clipboard history and Pinboards sync between your Macs through iCloud Drive (iCloud Drive/Paster/). The data only ever passes through your own iCloud — Déjà never touches a third-party server. Deletions are not propagated across devices.")
                     } else if syncFolderOverride.isEmpty {
-                        Text("iCloud Drive is not enabled on this Mac. Turn it on in System Settings → click your name → iCloud, or point Paster at a custom sync folder below.")
+                        Text("iCloud Drive is not enabled on this Mac. Turn it on in System Settings → click your name → iCloud, or point Déjà at a custom sync folder below.")
                     } else {
                         Text("The parent directory of the custom sync folder does not exist. Please check the path.")
                     }
@@ -402,7 +402,7 @@ struct AboutView: View {
             Image(systemName: "doc.on.clipboard.fill")
                 .font(.system(size: 48))
                 .foregroundStyle(.tint)
-            Text(verbatim: "Paster")
+            Text(verbatim: "Déjà")
                 .font(.system(size: 22, weight: .bold))
             Text("Version \(version)")
                 .font(.system(size: 12))

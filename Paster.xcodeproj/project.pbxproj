@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		AB0000000000000000000005 /* Paster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Paster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB0000000000000000000005 /* Deja.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Deja.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,7 +40,7 @@
 		AB0000000000000000000004 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AB0000000000000000000005 /* Paster.app */,
+				AB0000000000000000000005 /* Deja.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -65,7 +65,7 @@
 			);
 			name = Paster;
 			productName = Paster;
-			productReference = AB0000000000000000000005 /* Paster.app */;
+			productReference = AB0000000000000000000005 /* Deja.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -185,7 +185,8 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Paster;
+				INFOPLIST_FILE = Config/Paster-Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Déjà";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -193,9 +194,9 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.vibemage.Paster;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Deja;
 			};
 			name = Debug;
 		};
@@ -208,7 +209,8 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Paster;
+				INFOPLIST_FILE = Config/Paster-Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Déjà";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -216,9 +218,9 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.vibemage.Paster;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Deja;
 			};
 			name = Release;
 		};
@@ -232,7 +234,8 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 4;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Paster;
+				INFOPLIST_FILE = Config/Paster-Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Déjà";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -241,9 +244,9 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.vibemage.Paster;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Deja;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "APPSTORE $(inherited)";
 			};
 			name = "Release-AppStore";
