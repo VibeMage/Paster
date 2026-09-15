@@ -18,7 +18,7 @@ if [[ -z "$VERSION" ]]; then
   echo "无法从 project.pbxproj 解析 MARKETING_VERSION" >&2
   exit 1
 fi
-APP=build/Build/Products/Release/Deja.app
+APP=build/Build/Products/Release/Copyo.app
 
 echo "==> 构建 Paster $VERSION (Release)"
 # 先删掉旧产物，确保打包的一定是本次构建的结果
@@ -62,8 +62,8 @@ if [[ -n "${NOTARY_PROFILE:-}" ]]; then
   fi
   echo "==> 提交 Apple 公证（通常 1-5 分钟）"
   NOTARY_TMP=$(mktemp -d)
-  ditto -c -k --keepParent "$APP" "$NOTARY_TMP/Deja.zip"
-  xcrun notarytool submit "$NOTARY_TMP/Deja.zip" --keychain-profile "$NOTARY_PROFILE" --wait
+  ditto -c -k --keepParent "$APP" "$NOTARY_TMP/Copyo.zip"
+  xcrun notarytool submit "$NOTARY_TMP/Copyo.zip" --keychain-profile "$NOTARY_PROFILE" --wait
   rm -rf "$NOTARY_TMP"
   echo "==> Staple 公证票据"
   xcrun stapler staple "$APP"
@@ -76,12 +76,12 @@ echo "==> 生成 DMG"
 STAGING=$(mktemp -d)
 cp -R "$APP" "$STAGING/"
 ln -s /Applications "$STAGING/Applications"
-hdiutil create -volname "Déjà" -srcfolder "$STAGING" -ov -quiet \
-  -format UDZO "dist/Deja-$VERSION.dmg"
+hdiutil create -volname "Copyo" -srcfolder "$STAGING" -ov -quiet \
+  -format UDZO "dist/Copyo-$VERSION.dmg"
 rm -rf "$STAGING"
 
 echo "==> 生成 ZIP"
-ditto -c -k --keepParent "$APP" "dist/Deja-$VERSION.zip"
+ditto -c -k --keepParent "$APP" "dist/Copyo-$VERSION.zip"
 
 # 构建产物不进启动台/Spotlight（xcodebuild 每次都会自动注册）
 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -u "$APP" 2>/dev/null || true
@@ -98,6 +98,6 @@ else
   echo "完成。注意：ad-hoc 签名的包在其他机器上双击会提示「已损坏，无法打开」，"
   echo "这是 Gatekeeper 对无开发者身份应用的固定提示，不是包真的坏了。"
   echo "安装后需在终端执行一次："
-  echo "  xattr -cr /Applications/Deja.app"
+  echo "  xattr -cr /Applications/Copyo.app"
   echo "之后即可正常打开。"
 fi

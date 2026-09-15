@@ -67,7 +67,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    /// 用户在 Applications 里再次双击 Déjà 时呼出面板（否则毫无反应，会以为应用坏了）
+    /// 用户在 Applications 里再次双击 Copyo 时呼出面板（否则毫无反应，会以为应用坏了）
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows: Bool) -> Bool {
         panelController.show()
         return false
@@ -75,12 +75,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func showWelcome() {
         let alert = NSAlert()
-        alert.messageText = String(localized: "Welcome to Déjà")
+        alert.messageText = String(localized: "Welcome to Copyo")
 #if APPSTORE
         // 沙盒版的面板里有齿轮按钮，这里是唯一能告诉用户设置在哪的地方；
         // 直接分发版只能靠右键菜单栏图标打开设置。
         alert.informativeText = String(localized: """
-        Déjà lives in the menu bar (the clipboard icon in the top-right corner).
+        Copyo lives in the menu bar (the clipboard icon in the top-right corner).
 
         • Press \(HotkeyConfig.load().displayString) anytime to bring up the clipboard panel
         • Everything you copy is saved automatically — type to search
@@ -89,7 +89,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         """)
 #else
         alert.informativeText = String(localized: """
-        Déjà lives in the menu bar (the clipboard icon in the top-right corner).
+        Copyo lives in the menu bar (the clipboard icon in the top-right corner).
 
         • Press \(HotkeyConfig.load().displayString) anytime to bring up the clipboard panel
         • Everything you copy is saved automatically — type to search
@@ -118,9 +118,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             // 自定义模板图标（纯黑+透明），系统按明暗模式自动反色
             let icon = NSImage(named: "MenuBarIcon")
             icon?.isTemplate = true
-            icon?.accessibilityDescription = "Déjà"
+            icon?.accessibilityDescription = "Copyo"
             button.image = icon ?? NSImage(systemSymbolName: "doc.on.clipboard.fill",
-                                           accessibilityDescription: "Déjà")
+                                           accessibilityDescription: "Copyo")
             button.action = #selector(statusItemClicked)
             button.target = self
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
@@ -140,7 +140,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
 
         let config = HotkeyConfig.load()
-        let openItem = NSMenuItem(title: String(localized: "Open Déjà"),
+        let openItem = NSMenuItem(title: String(localized: "Open Copyo"),
                                   action: #selector(openPanel),
                                   keyEquivalent: config.keyEquivalentCharacter ?? "")
         openItem.keyEquivalentModifierMask = config.cocoaModifiers
@@ -159,7 +159,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(.separator())
 
-        let quitItem = NSMenuItem(title: String(localized: "Quit Déjà"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        let quitItem = NSMenuItem(title: String(localized: "Quit Copyo"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         menu.addItem(quitItem)
 
         // 临时挂载菜单以支持右键弹出，弹出后立即移除，保持左键点击直接开面板
