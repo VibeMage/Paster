@@ -1,6 +1,6 @@
 # Mac App Store 提审材料与操作清单
 
-创建日期：2026-09-01 · 最后更新：2026-09-01
+创建日期：2026-09-01 · 最后更新：2026-09-19
 
 ## 一、App Store Connect 建应用（你来操作）
 
@@ -29,10 +29,11 @@ appstoreconnect.apple.com → 我的 App → ➕ 新建 App：
 
 | 字段 | 填写 |
 | --- | --- |
-| 技术支持网址 | `https://gist.github.com/VibeMage/d787b8025a61e125eacd504313ee8a8f` |
+| 名称 | `Copyo: Clipboard History`（1.0.1 起，中英文商店同名，不设中文名） |
+| 技术支持网址 | `https://vibemage.github.io/copyo/support/`（仓库 2026-09-16 已改名为 copyo，旧地址随之 404，见第十二节） |
 | 营销网址 | 留空 |
-| 版本 | 1.0（与构建的 MARKETING_VERSION 一致） |
-| 版权 | `© 2026 Paster Contributors` |
+| 版本 | 1.0.1（与构建的 MARKETING_VERSION 一致） |
+| 版权 | `© 2026 Copyo Contributors` |
 
 ### 推广文本（170 字符内，可随时改无需审核）
 
@@ -51,10 +52,10 @@ appstoreconnect.apple.com → 我的 App → ➕ 新建 App：
 ```
 按下 ⇧⌘V，你复制过的一切从屏幕底部滑出。
 
-Paster 是一款开源的剪贴板管理工具：
+Copyo（曾用名 Paster）是一款开源的剪贴板管理工具：
 • 自动记录复制过的文本、富文本、链接、颜色、图片和文件
 • 底部卡片面板，即输即搜，全键盘操作
-• 选中回车，直接粘贴到你正在使用的应用
+• 选中回车，内容立刻回到剪贴板，⌘V 即可粘贴
 • Pinboard 固定常用内容，不受历史清理影响
 • 可选的文件夹同步（如 iCloud Drive），在多台 Mac 间同步历史
 • 自动跳过密码管理器等隐藏内容
@@ -68,10 +69,10 @@ Paster 是一款开源的剪贴板管理工具：
 ```
 Press ⇧⌘V and everything you've ever copied slides up from the bottom of your screen.
 
-Paster is an open-source clipboard manager:
+Copyo (formerly Paster) is an open-source clipboard manager:
 • Automatically captures text, rich text, links, colors, images and files
 • Bottom card panel — type to search, fully keyboard-driven
-• Hit Return to paste straight into the app you're working in
+• Hit Return and it's back on your clipboard, ready to paste with ⌘V
 • Pin frequently used clips to Pinboards, safe from history cleanup
 • Optional folder sync (e.g. iCloud Drive) across your Macs
 • Concealed content from password managers is never recorded
@@ -82,29 +83,30 @@ No telemetry, no analytics, no network requests. Fully open source.
 
 ### 关键词（100 字符内）
 
-- zh：`剪贴板,粘贴,历史,剪切板,效率,复制,clipboard,paste`
-- en：`clipboard,paste,history,copy,manager,productivity,snippets,pasteboard`
+- zh：`剪贴板,粘贴,历史,剪切板,效率,复制,clipboard,paste,copyo,paster`
+- en：`clipboard,paste,history,copy,manager,productivity,snippets,pasteboard,copyo,paster`
 
 ## 四、审核备注（App Review Notes，重点！）
 
 菜单栏工具是审核重点对象，把这段贴进「审核备注」能少一轮拒审：
 
 ```
-Paster is a menu bar app (LSUIElement) with no Dock icon or main window.
+Copyo (formerly Paster) is a menu bar app (LSUIElement) with no Dock icon or main window.
 
 How to use:
 1. On first launch a welcome dialog explains the basics.
 2. Press Shift+Command+V at any time to open the clipboard panel
    (slides up from the bottom of the screen).
 3. Copy anything — it appears in the panel automatically.
-4. Select a card and press Return to paste it into the frontmost app.
+4. Select a card and press Return to put it on the clipboard and go back
+   to the previous app, then paste with Command+V.
 5. Settings are available from the gear button in the panel header,
    or by right-clicking the menu bar icon.
 
-About Accessibility permission: the "paste into previous app" feature
-simulates Cmd+V and therefore asks the user to grant Accessibility
-access in System Settings. The app is fully functional without it —
-selecting a card simply copies it to the clipboard instead.
+About permissions: Copyo does not use Accessibility, event taps or input
+monitoring, and never asks for any privacy permission. The
+Shift+Command+V shortcut is registered with the Carbon
+RegisterEventHotKey API, which needs no permission.
 
 No account, no login, no network. All data is stored locally.
 ```
@@ -124,7 +126,15 @@ No account, no login, no network. All data is stored locally.
 
 ## 六、构建与上传
 
+**1.0 的上架包一律从 `release/1.0` 分支构建**，不要从 main 打：
+main 已经带上 iCloud（CloudKit）同步和推送 entitlements，归档时需要一张
+Mac App Development 描述文件，而这要求团队里注册过 Mac；`release/1.0` 是提审
+commit c7dd41f 加上「移除自动粘贴」，entitlements 只有沙盒，和 1.0 (3) 一样不需要描述文件，
+商店描述里「零网络请求」的说法也仍然成立。iCloud 版本留给 1.1。
+
 ```bash
+git worktree add ../Paster-release-1.0 release/1.0   # 已存在则跳过
+cd ../Paster-release-1.0
 UPLOAD=1 ./scripts/build-appstore.sh   # 归档 → 导出 .pkg → 直接上传 App Store Connect
 ```
 
@@ -149,3 +159,215 @@ UPLOAD=1 ./scripts/build-appstore.sh   # 归档 → 导出 .pkg → 直接上传
 提交后通常 1–3 天出结果。被拒不用慌——菜单栏工具常见拒因就是
 审核员找不到 UI（备注已覆盖）和权限用途不明（备注已覆盖）。
 把拒审信息发给 Claude 分析即可。
+
+## 八、2.1「需要补充信息」的回复（2026-09-03 首次提审收到）
+
+新开发者账号首次提审几乎必收这封信：要一段真机录屏 + 六项说明。回复贴在 App 审核 → 消息里（录屏作附件），同一段文字再粘到「App 审核信息 → 备注」供后续版本复用。
+
+### 回复正文（英文，可直接粘贴）
+
+```
+Thank you for reviewing Paster. Here is the requested information. A screen recording is attached to this message.
+
+1. Screen recording
+Recorded on a physical MacBook running macOS 26.6.1. It starts with launching Paster from the Finder and shows the typical flow: the welcome dialog, the menu bar icon, copying text, a link and an image in other apps, opening the clipboard panel with Shift+Command+V, searching, previewing with Space, pasting an item back into TextEdit with Return, pinning an item to a Pinboard, and the Settings window. Paster has no accounts, no login and no user-generated content shared with other people, so there are no registration, account deletion, content reporting or blocking flows.
+
+2. Purpose and target audience
+Paster is a clipboard history manager for macOS. Every time the user copies something (text, rich text, a link, a color value, an image or a file) Paster keeps it, and the user can bring any earlier item back with one keyboard shortcut. It solves the problem that the system clipboard only holds the most recent item, which forces people to re-copy content or lose it. Target audience: Mac users who copy and paste a lot, such as developers, writers, designers, students and office workers. The app is free with no in-app purchases.
+
+3. Setup and access
+No account, login credentials or sample files are required.
+- Launch Paster. A welcome dialog explains the basics. Paster then lives in the menu bar (the clipboard icon in the top-right corner); it has no Dock icon and no main window.
+- Copy anything in any app. It appears in Paster automatically.
+- Press Shift+Command+V, or click the menu bar icon, to open the clipboard panel. It slides up from the bottom of the screen. Type to search, use the arrow keys to move, press Space to preview.
+- Select an item and press Return to paste it into the app you were using. This uses macOS Accessibility: enable Paster in System Settings > Privacy & Security > Accessibility. Without this permission, Return still copies the item to the clipboard for manual pasting. If pasting does not work right after granting the permission, quit and reopen Paster.
+- Right-click a card to pin it to a Pinboard, copy it as plain text, or delete it.
+- Settings: click the gear button in the panel header, or right-click the menu bar icon and choose Settings.
+
+4. External services
+None. Paster makes no network requests and uses no third-party SDKs, analytics, authentication services, payment processors or AI services. All data is stored locally in the user's Application Support folder. The optional sync feature only writes files to a folder the user explicitly selects (for example a folder inside iCloud Drive) through the standard file APIs; no server operated by us is involved.
+
+5. Regional differences
+None. The app functions identically in all regions. The interface is localized in English and Simplified Chinese.
+
+6. Regulated industries and third-party material
+Not applicable. Paster does not operate in a regulated industry and contains no protected third-party material. It only stores content the user copies on their own device.
+
+This build was tested on a physical MacBook running macOS 26.6.1 before submission.
+```
+
+粘到「备注」时把第一段末尾的 "A screen recording is attached to this message." 换成 "A screen recording was provided as an attachment in App Review messages on 2026-09-03."。
+
+### 录屏方案（不暴露本机内容）
+
+- 新建一个 macOS 标准用户「Demo」录制，桌面干净、无公司应用。语言设为 English。
+- 录屏用的沙盒版从提审的 commit（c7dd41f）构建，放在 /Users/Shared/PasterDemo/Paster.app，演示文件在同目录。
+- 录前在 Demo 账号里先给 Paster 辅助功能权限（系统设置 → 隐私与安全性 → 辅助功能 → + 选中该 app），开勿扰。
+- ⇧⌘5 录整个屏幕，90 秒内：Finder 双击启动 → 欢迎对话框点 Try It Now → 面板出现后关掉 → 在 TextEdit 复制一句话、Safari 复制一个链接、预览里复制一张图 → ⇧⌘V 呼出面板 → 输入关键词搜索 → 空格预览 → 回车粘贴进 TextEdit → 右键卡片固定到 Pinboard → 点齿轮打开设置扫一眼各标签 → 停止录制。
+- 录完的 .mov 放到 /Users/Shared/PasterDemo/，用 avconvert 压成 1080p H.264 再上传（附件尽量控制在 50MB 内）。
+
+## 九、2026-09-08 第二次拒审（1.0 (3)）：2.4.5 辅助功能 + 1.5 支持网址
+
+### 拒审内容与事实核对
+
+| 条款 | 审核说法 | 事实 |
+| --- | --- | --- |
+| 2.4.5 | 应用用辅助功能（Accessibility）来实现热键，属于把无障碍功能挪作他用 | 全局快捷键走 Carbon `RegisterEventHotKey`（`Paster/Services/HotkeyManager.swift`），不需要任何权限。辅助功能只在自动粘贴时用于向目标应用发送 ⌘V（当时的 `PasteService.sendCmdV`，现已删除）。审核员把两者混为一谈，欢迎对话框和设置页当时的文案也确实没把两者分开 |
+| 1.5 | 支持网址（Gist）不是一个可以提问、求助的网页 | Gist 里只写了「仓库发布后公开」，而仓库当时是私有的，用户没有任何联系渠道 |
+
+### 1.0 (4) 的改动
+
+- **整体移除「自动粘贴」功能**（两种构建都移除，不留条件编译）。选中条目回车后：写回剪贴板、收起面板、把焦点还给之前的应用，用户按 ⌘V 粘贴。
+- 应用不再调用任何辅助功能 API（`AXIsProcessTrusted`、`CGEvent` 投递等），不再导入 `ApplicationServices`，也不再有任何权限提示。
+- 随之删除：设置页「选中后自动粘贴」「粘贴音效」开关及辅助功能脚注、未授权提示弹窗、辅助功能变更通知监听；「始终以纯文本粘贴」改名为「始终以纯文本复制」。
+- 面板右键菜单「粘贴 / 以纯文本粘贴 / 仅复制」合并为「复制 / 以纯文本复制」；快捷键页文案同步改为「复制」。
+- 欢迎对话框只讲快捷键、搜索、回车复制和设置入口。
+- 审核备注（第四节）改写，明确应用不使用辅助功能以及快捷键的实现方式。
+- 新增支持页面 `docs/support/index.html`（中英双语：联系方式、快速上手、FAQ、隐私政策链接）。
+- Release-AppStore 的 `CURRENT_PROJECT_VERSION` 已递增到 4；导出时 Xcode 又自动抬到 5（见提交顺序）。
+- 自动粘贴的旧实现保留在 git 历史里（commit af221d4 时的 `Paster/Services/PasteService.swift`）。上架后若要加回，提审时需自带 2.4.5 的说明，且可能再次被拒。
+
+### 回复正文（贴到 App 审核 → 消息，两条拒审一起回）
+
+```
+Thank you for the detailed review. Both issues are addressed in build 1.0 (5).
+
+Guideline 2.4.5 – Accessibility
+
+The feature that used Accessibility, "Paste into the previous app on selection", has been removed from the app. Build 5 no longer calls any Accessibility API and never asks for Accessibility access; nothing in the app requires it. When the user selects an item and presses Return, Paster puts it on the clipboard, closes the panel and returns focus to the app they were using, where they paste with Command+V.
+
+For clarity: the Shift+Command+V shortcut never used Accessibility. It is registered with the Carbon RegisterEventHotKey API, which needs no permission, and is unchanged.
+
+Guideline 1.5 – Support URL
+
+The Support URL has been updated to https://vibemage.github.io/Paster/support/. It is a dedicated support page with contact information, a quick-start guide, an FAQ and a link to the privacy policy.
+```
+
+### 发布支持页面（你来操作，回复审核前必须已上线）
+
+先把页面里的占位邮箱换成真实的支持邮箱（两处）：
+
+```bash
+grep -n "REPLACE-ME" docs/support/index.html
+sed -i '' 's/support@REPLACE-ME.example/你的邮箱/g' docs/support/index.html
+```
+
+> ⚠️ 以下命令是 2026-09-09 当时的操作记录，仓库那时还叫 `Paster`。仓库已于 2026-09-16 改名为 `copyo`，
+> 现在的支持页面地址是 `https://vibemage.github.io/copyo/support/`。照抄下面的命令会操作到不存在的仓库。
+
+**方案 A（推荐，与「上架即开源」的计划一致）**：仓库转公开，用 main 分支的 /docs 目录做 GitHub Pages。
+issues 页面同时可用，PRIVACY.md 和支持页里的 issues 链接都会生效。
+
+```bash
+git add docs/support && git commit -m "[docs][paster][1.0]: add support page" && git push
+gh repo edit VibeMage/Paster --visibility public --accept-visibility-change-consequences
+gh api -X POST repos/VibeMage/Paster/pages -f 'source[branch]=main' -f 'source[path]=/docs'
+# 等 1–2 分钟
+curl -sI https://vibemage.github.io/Paster/support/ | head -1   # 期望 HTTP/2 200
+```
+
+**方案 B（仓库暂时保持私有）**：只把这一个页面推到一个新的公开仓库。
+此时支持 URL 改为 `https://vibemage.github.io/paster-support/`，回复正文和 ASC 表单里同步替换；
+页面里的 issues 链接会 404，建议顺手把那两行改成邮箱。
+
+```bash
+tmp=$(mktemp -d) && cp docs/support/index.html "$tmp/" && cd "$tmp" \
+  && git init -q -b main && git add . && git commit -qm "Add support page" \
+  && gh repo create VibeMage/paster-support --public --source=. --push \
+  && gh api -X POST repos/VibeMage/paster-support/pages -f 'source[branch]=main' -f 'source[path]=/'
+```
+
+### 提交顺序（1.0 的历史记录；1.0.1 请按第十一节的「App Store Connect 操作」，那里的支持网址才是现在有效的）
+
+1. 上传新构建：从 `release/1.0` 出包（见第六节），用 Transporter 拖入
+   `build/appstore/Paster-1.0-appstore.pkg` → Deliver；或直接 `UPLOAD=1` 让脚本上传。
+   注意包里的构建号由 Xcode 导出时自动抬高（取 App Store Connect 上已有的最大值加一），
+   2026-09-09 出的包是 1.0 (5)，回复正文里的构建号要与实际上传的一致。
+   上传后等 App Store Connect 处理完（收到「已完成处理」邮件，通常 5–30 分钟）。
+2. App Store Connect → 我的 App → Paster → 1.0 版本页：
+   - 「构建版本」移除 1.0 (3)，选择新上传的构建（1.0 (5)）。
+   - 「技术支持网址」改为 `https://vibemage.github.io/Paster/support/`。
+   - 「描述」中英文各改一行（见第三节：回车后内容回到剪贴板，⌘V 粘贴）。
+   - 「App 审核信息 → 备注」整段替换为第四节的新版本。
+   - 存储。
+3. 「App 审核」区域打开与审核的消息记录，回复上面的回复正文。
+4. 点右上角「提交以供审核」。
+
+## 十、审核通过（2026-09-11，1.0 (5)）
+
+- 状态：审核通过，欧盟之外地区上架，商店页面最长 24 小时后可见。
+- 欧盟 27 国暂不可售：需要先在 App Store Connect 完成《数字服务法案》(DSA) 交易者状态声明。
+  Paster 免费、无内购、无广告，个人账号可选「非交易者」：应用随即在欧盟可售，商店页对欧盟用户
+  显示一条「消费者保护法不适用」的提示，不公开任何联系方式。若选「交易者」，个人开发者的地址、
+  电话、邮箱会公开显示在欧盟商店页，并需邮箱/手机验证和上传证明文件。
+- 操作路径：App Store Connect → 业务（Business）→ 协议（Agreements）→ 合规（Compliance）→
+  Digital Services Act → Complete Compliance Requirements → 选「This is not a trader account」→ Done。
+  也可在 App → App 信息 → App Store Regulations and Permits 里按应用单独设置。
+
+## 十一、改名：Paster → Copyo（2026-09-15，随 1.0.1 提交）
+
+### 为什么改、为什么是它
+
+- pasterapp.com 的 Paster 是同平台同品类的 macOS 剪贴板管理器，2026-02-28 上线，比我们早半年；对方在先使用，名称争议一旦提起，被动的是我们。App Store 搜索又把 paster 归一成 paste，新应用被 Paste 系老应用淹没。
+- 先后评估过 Déjà + 拾遗（含义好但约 30 个同名应用、deja.app 是别人的产品，独立性不达标）、Revoici（法语真词「它又在这儿了」，最独立，但英语用户读音有门槛且易被听成 revoice）、Copylet（近似 couplet、字形近 Copilot）。最终选 **Copyo**：copy 加一个 o，好念好记，Mac/iOS 商店（美区、中国区）零同名，Google 无同名产品，copyo.app / .io / .dev 可注册；.com 自 2012 年被人持有，GitHub 的 copyo 是闲置个人账号。全部候选与检查数据见对比板（Claude artifact「Paster 改名候选板」）。
+- 不设中文名：中英文商店和界面统一叫 Copyo。
+
+### 代码层面改了什么（`rename_brand.py`，main 与 release/1.0 都已执行）
+
+- 产品文件名 `Copyo.app`（PRODUCT_NAME = Copyo），显示名 `Copyo`，用户可见文案全部改名（欢迎对话框、菜单栏菜单、设置窗口标题、关于页、iOS 引导与分享扩展）。
+- **不动的**：bundle ID `dev.vibemage.Paster`、数据目录 `Application Support/Paster/`、沙盒容器路径、同步文件夹里的 `Paster/` 子目录、CloudKit 容器、PasterCore 模块名、target/scheme 名、工程文件名。老用户升级后数据原地保留。
+- release/1.0 的 MARKETING_VERSION 升到 1.0.1；上架包 `Copyo-1.0.1-appstore.pkg`。
+- 仓库当时暂未改名（Pages 项目站地址不随仓库改名跳转，线上 1.0 的支持网址会失效）。**这条后来没有守住**：仓库于 2026-09-16 改名为 `copyo`，预言的后果照样发生，详见第十二节。
+
+### 提交 1.0.1 前你要做的
+
+1. 商标检索（五分钟）：https://tmsearch.uspto.gov 搜 COPYO（第 9 类）。中国区可顺手在 https://sbj.cnipa.gov.cn 查一下。
+2. 建议尽快注册 copyo.app（RDAP 查过可注册），挂到 GitHub Pages 做自定义域名。
+
+### App Store Connect 操作
+
+1. 应用（商店里现在仍显示 Paster）→ 版本 → ➕ 新版本 `1.0.1`。
+2. App 信息 → 可本地化信息：英文与简体中文名称都改为 `Copyo: Clipboard History`。副标题不变。
+3. 版本页：描述（第三节新版）、关键词（第三节新版）、审核备注（第四节新版）、技术支持网址改为 `https://vibemage.github.io/copyo/support/`（**必须改，旧地址已 404**）、版权改为 `© 2026 Copyo Contributors`。
+4. 此版本的新增内容：
+   - zh：`Paster 更名为 Copyo。功能不变，你的历史记录、Pinboard 和设置全部原地保留。`
+   - en：`Paster is now Copyo. Same app, same data — only the name has changed.`
+5. Transporter 拖入 `build/appstore/Copyo-1.0.1-appstore.pkg` → Deliver；处理完后在版本页选中该构建。
+6. 提交以供审核。名称在审核通过并发布后才会在商店里变更；商店链接里的 id 不变。
+
+## 十二、仓库改名导致线上支持网址 404（2026-09-16 发生，2026-09-19 排查）
+
+### 发生了什么
+
+GitHub 仓库从 `VibeMage/Paster` 改名为 `VibeMage/copyo`。GitHub 会为 github.com 的仓库链接做 301 跳转，
+但 **GitHub Pages 项目站地址不跳转**——第十一节里预先写下的正是这个风险，改名时没有照做。
+
+| 地址 | 状态 |
+| --- | --- |
+| `https://vibemage.github.io/copyo/support/` | 200 |
+| `https://vibemage.github.io/Paster/support/` | 404 ← 线上 1.0 在 App Store 填的就是这个 |
+
+后果：已上架的 1.0 (5) 商品页上的「App 支持」按钮点开是 GitHub 的 404 页。1.5 条款正是 2026-09-08 那次拒审的原因之一。
+
+### 为什么不能直接去 App Store Connect 改
+
+「技术支持网址」是**版本级**字段。Apple 自 2018 年 4 月起规定，支持网址、营销网址和「此版本新增内容」
+只能随新版本提交一起修改（见 developer.apple.com/news/?id=12072010c）。已批准版本上可随时编辑的只有
+推广文本和版权。所以线上 1.0 的这个链接，在 1.0.1 过审之前无法通过 ASC 修好。
+
+### 两条路（二选一，需要你决定）
+
+**A. 建一个跳转仓库**（唯一能立刻修好线上 1.0 的办法）
+新建公开仓库 `VibeMage/Paster`，只放 `docs/.nojekyll` 与 `docs/support/index.html`（meta refresh 跳到
+`/copyo/support/`），Pages 设为 main 分支 /docs。旧地址几分钟内恢复。
+代价：`github.com/VibeMage/Paster` 的改名 301 会被这个新仓库顶掉。所以**必须先**把仓库内所有指向旧仓库名的
+链接改完（已于 2026-09-19 改完）并把两个工作树的 `git remote` 换成 `copyo.git`（已改），否则 push 会推到跳转仓库。
+
+**B. 不建，接受窗口期**
+等 1.0.1 过审上架，支持网址随新版本一起切到 `/copyo/support/`。这期间（1–3 天）线上 1.0 的支持链接持续 404。
+
+### 长期根治
+
+注册 `copyo.app`，在 copyo 仓库 `docs/` 下放 CNAME 并在 Pages 设置里绑定，支持网址改用
+`https://copyo.app/support/`。此后再改仓库名也不会断。注意这**不能**修复旧的 `/Paster/` 路径，
+那个路径只能靠方案 A 的跳转仓库兜底。

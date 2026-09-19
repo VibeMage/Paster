@@ -20,7 +20,7 @@ if [[ -z "$VERSION" ]]; then
 fi
 APP=build/Build/Products/Release/Copyo.app
 
-echo "==> 构建 Paster $VERSION (Release)"
+echo "==> 构建 Copyo $VERSION (Release)"
 # 先删掉旧产物，确保打包的一定是本次构建的结果
 rm -rf "$APP"
 BUILD_LOG=$(mktemp)
